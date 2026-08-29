@@ -1,0 +1,73 @@
+menu "QuickApp Device Pin Configuration"
+
+    comment "--- SPI Bus (LCD + Touch shared) ---"
+
+    config QA_LCD_MOSI
+        int "SPI MOSI GPIO"
+        default 11
+        help
+            SPI MOSI pin, shared by ILI9341 and XPT2046.
+
+    config QA_LCD_MISO
+        int "SPI MISO GPIO"
+        default 13
+        help
+            SPI MISO pin, shared by ILI9341 and XPT2046.
+
+    config QA_LCD_SCLK
+        int "SPI SCLK GPIO"
+        default 12
+        help
+            SPI clock pin, shared by ILI9341 and XPT2046.
+
+    comment "--- LCD (ILI9341) ---"
+
+    config QA_LCD_CS
+        int "LCD CS GPIO"
+        default 10
+        help
+            SPI chip select for ILI9341 display.
+
+    config QA_LCD_DC
+        int "LCD DC GPIO"
+        default 5
+        help
+            Data/Command pin for ILI9341 display.
+
+    config QA_LCD_RST
+        int "LCD RST GPIO"
+        default 4
+        help
+            Reset pin for ILI9341 display. Set -1 if not connected.
+
+    config QA_LCD_BL
+        int "LCD Backlight GPIO"
+        default 6
+        help
+            Backlight control pin. High = on. Set -1 if always on.
+
+    comment "--- Touch (XPT2046) ---"
+
+    config QA_TP_CS
+        int "Touch CS GPIO"
+        default 7
+        help
+            SPI chip select for XPT2046 touch controller.
+
+    config QA_TP_IRQ
+        int "Touch IRQ GPIO"
+        default 8
+        help
+            Touch interrupt pin (active low). Set -1 to use polling only.
+
+    comment "--- Display Geometry ---"
+
+    config QA_DISPLAY_WIDTH
+        int "Display width (pixels)"
+        default 240
+
+    config QA_DISPLAY_HEIGHT
+        int "Display height (pixels)"
+        default 320
+
+endmenu

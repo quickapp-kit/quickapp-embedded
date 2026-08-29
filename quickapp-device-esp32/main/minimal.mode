@@ -1,0 +1,2 @@
+此文件存在时, 项目以 MINIMAL 模式构建 (仅硬件验证: LVGL + ILI9341 + XPT2046, 不含 QuickApp runtime)。
+删除此文件即切换回 FULL 模式 (含 QuickJS + runtime)。

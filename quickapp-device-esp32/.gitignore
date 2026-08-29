@@ -1,0 +1,15 @@
+# ESP-IDF 构建产物
+build/
+
+# 自动生成的 sdkconfig (保留 sdkconfig.defaults 作为可复现的配置源)
+sdkconfig
+sdkconfig.old
+
+# 依赖锁与管理器缓存
+dependencies.lock
+managed_components/
+
+# 编辑器/系统
+.DS_Store
+*.swp
+.vscode/
