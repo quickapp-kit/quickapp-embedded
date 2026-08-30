@@ -1,0 +1,14 @@
+# 依赖版本锁 — 保证任意机器复现同一构建环境
+# 由 setup.sh 读取。修改后请重跑 setup.sh。
+
+# ESP-IDF: 精确 commit (git checkout 到此点, 保证源码一致)
+ESP_IDF_REPO=https://github.com/espressif/esp-idf.git
+ESP_IDF_TAG=v5.4
+ESP_IDF_COMMIT=67c1de1eebe095d554d281952fde63c16ee2dca0
+
+# 目标芯片 (install.sh 按此安装工具链, 工具链版本由 ESP-IDF 的 tools.json 精确锁定)
+IDF_TARGET=esp32s3
+
+# 工具链约束来源 (ESP-IDF 自带, 精确到补丁版本, 无需手工指定)
+# espressif/espidf.constraints.v5.4.txt
+# xtensa-esp-elf: esp-14.2.0_20241119 (由 v5.4 的 tools.json 决定)

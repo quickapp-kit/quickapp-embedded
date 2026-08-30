@@ -1,4 +1,4 @@
-# ESP-IDF 构建产物
+# ===== ESP-IDF 构建产物 =====
 build/
 
 # 自动生成的 sdkconfig (保留 sdkconfig.defaults 作为可复现的配置源)
@@ -9,7 +9,17 @@ sdkconfig.old
 dependencies.lock
 managed_components/
 
-# 编辑器/系统
+# ===== 依赖源 (deps-source) =====
+# 工具链 + ESP-IDF 源码体积巨大 (~4GB) 且平台相关, 不进 git。
+# 通过 deps-source/setup.sh + DEPS.lock 精确复现, 保证环境统一。
+deps-source/esp-idf/
+deps-source/espressif/
+# 但保留复现所需的脚本与锁文件 (见下方 ! 白名单)
+!deps-source/setup.sh
+!deps-source/DEPS.lock
+!deps-source/README.md
+
+# ===== 编辑器/系统 =====
 .DS_Store
 *.swp
 .vscode/
