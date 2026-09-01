@@ -7,6 +7,7 @@
 _QA_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
 
 export IDF_TOOLS_PATH="$_QA_ROOT/deps-source/espressif"
+export IDF_SKIP_CHECK_SUBMODULES=1
 
 if [ ! -f "$_QA_ROOT/deps-source/esp-idf/export.sh" ]; then
   echo "ESP-IDF 未安装。先运行:  cd deps-source && ./setup.sh" >&2

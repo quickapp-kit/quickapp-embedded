@@ -2,12 +2,12 @@
 # Provides: QuickJS, Yoga, zlib (vendored sources)
 
 # QA_MINIMAL 模式: 注册空组件, 不编译任何源码 (硬件验证阶段)
-if(EXISTS "${CMAKE_SOURCE_DIR}/main/minimal.mode")
+if(QA_MINIMAL)
     idf_component_register()
     return()
 endif()
 
-set(THIRD_PARTY_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../../../source/third_party")
+set(THIRD_PARTY_ROOT "${QUICKAPP_KIT_ROOT}/source/third_party")
 
 # --- QuickJS ---
 file(GLOB QUICKJS_SRCS

@@ -2,12 +2,12 @@
 # Bridges quickapp-runtime-lvgl into ESP-IDF build (embedded minimal config)
 
 # QA_MINIMAL 模式: 注册空组件, 不编译 (硬件验证阶段)
-if(EXISTS "${CMAKE_SOURCE_DIR}/main/minimal.mode")
+if(QA_MINIMAL)
     idf_component_register()
     return()
 endif()
 
-set(LVGL_RT_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../../../quickapp-runtime-lvgl")
+set(LVGL_RT_ROOT "${QUICKAPP_KIT_ROOT}/quickapp-runtime-lvgl")
 
 # 收集 LVGL runtime 源文件
 file(GLOB_RECURSE LVGL_RT_SRCS

@@ -1,7 +1,7 @@
 # LVGL component wrapper for ESP-IDF
 # Pulls in the vendored LVGL source from third_party
 
-set(LVGL_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../../../source/third_party/lvgl")
+set(LVGL_ROOT "${QUICKAPP_KIT_ROOT}/source/third_party/lvgl")
 
 file(GLOB_RECURSE LVGL_SRCS
     "${LVGL_ROOT}/src/*.c"

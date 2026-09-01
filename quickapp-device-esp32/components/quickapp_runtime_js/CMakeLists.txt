@@ -2,12 +2,12 @@
 # Bridges quickapp-runtime-js into ESP-IDF build (uses vendored QuickJS)
 
 # QA_MINIMAL 模式: 注册空组件, 不编译 (硬件验证阶段)
-if(EXISTS "${CMAKE_SOURCE_DIR}/main/minimal.mode")
+if(QA_MINIMAL)
     idf_component_register()
     return()
 endif()
 
-set(JS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../../../quickapp-runtime-js")
+set(JS_ROOT "${QUICKAPP_KIT_ROOT}/quickapp-runtime-js")
 
 # 收集所有 JS runtime 源文件
 file(GLOB_RECURSE JS_SRCS

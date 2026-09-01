@@ -2,12 +2,12 @@
 # Bridges the CMake library targets from quickapp-runtime-core into ESP-IDF build
 
 # QA_MINIMAL 模式: 注册空组件, 不编译 (硬件验证阶段)
-if(EXISTS "${CMAKE_SOURCE_DIR}/main/minimal.mode")
+if(QA_MINIMAL)
     idf_component_register()
     return()
 endif()
 
-set(CORE_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../../../quickapp-runtime-core")
+set(CORE_ROOT "${QUICKAPP_KIT_ROOT}/quickapp-runtime-core")
 
 # 收集所有 core 源文件
 file(GLOB_RECURSE CORE_SRCS

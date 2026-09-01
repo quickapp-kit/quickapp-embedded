@@ -1,6 +1,6 @@
 # QA_MINIMAL 模式: 只验证硬件 (LVGL + ILI9341 + XPT2046), 不集成 runtime
-# 通过 idf.py -DQA_MINIMAL=1 build 启用
-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/minimal.mode")
+# 由项目根目录的 main/minimal.mode 文件统一控制。
+if(QA_MINIMAL)
     message(STATUS "Building in MINIMAL mode (hardware test, no runtime)")
     idf_component_register(
         SRCS
