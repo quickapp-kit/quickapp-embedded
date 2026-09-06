@@ -39,3 +39,6 @@ else()
 endif()
 
 target_compile_features(${COMPONENT_LIB} PUBLIC cxx_std_20)
+if(NOT QA_MINIMAL)
+    target_compile_options(${COMPONENT_LIB} PRIVATE -fexceptions)
+endif()

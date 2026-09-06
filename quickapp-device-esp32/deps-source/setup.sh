@@ -12,6 +12,11 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
+# Avoid the outdated Apple system Python, whose package metadata handling is
+# incompatible with current ESP-IDF transitive dependencies.
+# shellcheck disable=SC1091
+source ./select-python.sh
+
 # 读取版本锁
 # shellcheck disable=SC1091
 source ./DEPS.lock

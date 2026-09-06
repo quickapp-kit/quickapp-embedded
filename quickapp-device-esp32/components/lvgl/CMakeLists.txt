@@ -1,6 +1,8 @@
 # LVGL component wrapper for ESP-IDF
 # Pulls in the vendored LVGL source from third_party
 
+get_filename_component(QUICKAPP_KIT_ROOT
+    "${CMAKE_CURRENT_LIST_DIR}/../../../.." ABSOLUTE)
 set(LVGL_ROOT "${QUICKAPP_KIT_ROOT}/source/third_party/lvgl")
 
 file(GLOB_RECURSE LVGL_SRCS

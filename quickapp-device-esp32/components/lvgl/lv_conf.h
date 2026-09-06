@@ -63,7 +63,7 @@
 #define LV_USE_SPAN 0
 #define LV_USE_SPINBOX 0
 #define LV_USE_SPINNER 0
-#define LV_USE_TABVIEW 0
+#define LV_USE_TABVIEW 1
 #define LV_USE_TILEVIEW 0
 #define LV_USE_WIN 0
 
@@ -87,5 +87,9 @@
 
 /* 渲染: 使用软件渲染 */
 #define LV_USE_DRAW_SW 1
+
+#define LV_USE_TINY_TTF 1
+#define LV_TINY_TTF_FILE_SUPPORT 0
+#define LV_TINY_TTF_CACHE_GLYPH_CNT 64
 
 #endif /* LV_CONF_H */

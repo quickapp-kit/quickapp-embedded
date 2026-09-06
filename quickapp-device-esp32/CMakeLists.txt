@@ -3,7 +3,8 @@
 cmake_minimum_required(VERSION 3.16)
 
 # quickapp-device-esp32 lives at quickapp-kit-ai/quickapp-embedded/quickapp-device-esp32.
-# Keep the monorepo boundary in one place so component wrappers do not infer it.
+# Component wrappers repeat this boundary because ESP-IDF discovers dependencies
+# in separate CMake scopes before configuring the project component.
 set(QUICKAPP_KIT_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../.." CACHE PATH
     "QuickApp Kit monorepo root")
 
@@ -14,7 +15,9 @@ set(EXTRA_COMPONENT_DIRS
 
 # QA_MINIMAL 模式开关: 存在 main/minimal.mode 文件即启用
 # (用文件标记而非 -D 参数, 保证 flash/monitor 等命令 re-run CMake 时开关不丢失)
-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/main/minimal.mode")
+file(GLOB QA_MINIMAL_MODE_MARKER CONFIGURE_DEPENDS
+    "${CMAKE_CURRENT_SOURCE_DIR}/main/minimal.mode")
+if(QA_MINIMAL_MODE_MARKER)
     set(QA_MINIMAL ON CACHE BOOL "Build only the ESP32 hardware validation app" FORCE)
     set(EXCLUDE_COMPONENTS
         quickapp_runtime_core

@@ -104,7 +104,7 @@ static std::uint64_t loop_resolution_ns(void* /*ctx*/) noexcept {
 }
 
 static qlf::WakeResult loop_notify(void* /*ctx*/) noexcept {
-  return qlf::WakeResult::success();
+  return qlf::WakeResult::kNotified;
 }
 
 static qlf::WakeResult loop_wait_until(void* /*ctx*/,
@@ -117,7 +117,7 @@ static qlf::WakeResult loop_wait_until(void* /*ctx*/,
       vTaskDelay(pdMS_TO_TICKS(delay_us / 1000));
     }
   }
-  return qlf::WakeResult::success();
+  return qlf::WakeResult::kDeadline;
 }
 
 static std::size_t loop_service(void* /*ctx*/,
@@ -183,10 +183,18 @@ extern "C" void app_main() {
 
   // 5. 创建 PackageLoader
   auto composition = makeRuntimeComposition();
-  qc::RequestIdAllocator request_ids;
+  qc::AppRuntimeFactory runtime_factory;
+  auto identity_result = runtime_factory.create();
+  if (!identity_result) {
+    const auto message = identity_result.error().message;
+    ESP_LOGE(TAG, "App runtime identity creation failed: %.*s",
+             static_cast<int>(message.size()), message.data());
+    return;
+  }
+  auto runtime_identity = std::move(identity_result).value();
 
   auto loader_result = qp::PackageLoader::create(
-      rpk_source, request_ids, composition);
+      rpk_source, runtime_identity.request_ids(), composition);
   if (!loader_result) {
     ESP_LOGE(TAG, "PackageLoader creation failed");
     return;
@@ -197,23 +205,29 @@ extern "C" void app_main() {
   // 6. 验证并打开包
   // 同步加载: 在嵌入式环境中 completion 是同步调用的
   std::shared_ptr<const qp::VerifiedPackage> package;
-  auto verify_result = loader->verify([&](auto result) {
+  auto open_result = loader->open([&](auto result) {
     if (result) {
       package = std::move(result).value();
     } else {
-      ESP_LOGE(TAG, "RPK verification failed: %s",
-               result.error().message.c_str());
+      const auto message = result.error().message;
+      ESP_LOGE(TAG, "RPK verification failed: %.*s",
+               static_cast<int>(message.size()), message.data());
     }
   });
 
+  if (!open_result) {
+    const auto message = open_result.error().message;
+    ESP_LOGE(TAG, "RPK open request failed: %.*s",
+             static_cast<int>(message.size()), message.data());
+    return;
+  }
   if (!package) {
     ESP_LOGE(TAG, "RPK verification failed or no package produced");
     return;
   }
 
-  ESP_LOGI(TAG, "RPK verified: %s v%s",
-           package->manifest().app_name.c_str(),
-           package->manifest().version_name.c_str());
+  ESP_LOGI(TAG, "RPK verified: package=%s, entry=%s",
+           package->package_id().c_str(), package->entry_route().c_str());
 
   // 7. 设置 embedded loop backend
   qlb::BuiltinLoopCallbacks loop_callbacks{};
