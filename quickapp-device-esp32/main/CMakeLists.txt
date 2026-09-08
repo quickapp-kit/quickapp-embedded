@@ -18,10 +18,11 @@ else()
     message(STATUS "Building in FULL mode (with QuickApp runtime)")
     idf_component_register(
         SRCS
-            "main.cpp"
+            "device_composition.cpp"
             "display_driver.cpp"
             "touch_driver.cpp"
             "spiffs_package_source.cpp"
+            "atomic_shim.c"
         INCLUDE_DIRS "."
         REQUIRES
             driver
@@ -31,6 +32,7 @@ else()
             esp_partition
             spi_flash
             lvgl
+            pthread
         PRIV_REQUIRES
             quickapp_runtime_core
             quickapp_runtime_js
@@ -38,7 +40,13 @@ else()
     )
 endif()
 
+if(NOT QA_MINIMAL)
+    spiffs_create_partition_image(
+        rpk_store "${QA_RPK_DATA_DIR}" FLASH_IN_PROJECT)
+endif()
+
 target_compile_features(${COMPONENT_LIB} PUBLIC cxx_std_20)
 if(NOT QA_MINIMAL)
     target_compile_options(${COMPONENT_LIB} PRIVATE -fexceptions)
+
 endif()

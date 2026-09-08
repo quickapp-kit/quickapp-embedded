@@ -45,8 +45,11 @@ CONFIG_QA_LCD_BL=6
 CONFIG_QA_TP_CS=7
 CONFIG_QA_TP_IRQ=8
 
-# 看门狗: 增加超时 (初始化较慢)
-CONFIG_ESP_TASK_WDT_TIMEOUT_S=10
+# 看门狗 (bring-up: RPK open() 同步解析 zip 期间 CPU 长时间不让出)
+# 关闭中断看门狗, 放宽任务看门狗, 避免解析大 RPK 时误触发
+CONFIG_ESP_TASK_WDT_TIMEOUT_S=30
+CONFIG_ESP_TASK_WDT_INIT=n
+CONFIG_ESP_INT_WDT=n
 
 # 日志级别
 CONFIG_LOG_DEFAULT_LEVEL_INFO=y

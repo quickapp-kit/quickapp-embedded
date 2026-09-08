@@ -40,6 +40,8 @@ static const char* TAG = "touch";
 static spi_device_handle_t s_touch_spi = nullptr;
 static lv_indev_t* s_indev = nullptr;
 static volatile bool s_touch_pressed = false;
+// 诊断: 触摸按下边沿锁存, 用于每次按下只打印一次坐标
+static bool s_press_edge_latched = false;
 
 // T_IRQ 中断处理: 低电平表示有触摸
 static void IRAM_ATTR touch_irq_handler(void* arg) {
@@ -128,6 +130,7 @@ static void touch_read_cb(lv_indev_t* /*indev*/, lv_indev_data_t* data) {
   if (TP_IRQ >= 0 && gpio_get_level(static_cast<gpio_num_t>(TP_IRQ)) != 0) {
     // IRQ 高电平 = 无触摸
     data->state = LV_INDEV_STATE_RELEASED;
+    s_press_edge_latched = false;
     return;
   }
 
@@ -135,8 +138,14 @@ static void touch_read_cb(lv_indev_t* /*indev*/, lv_indev_data_t* data) {
     data->point.x = x;
     data->point.y = y;
     data->state = LV_INDEV_STATE_PRESSED;
+    // 诊断: 仅在 released->pressed 边沿打印一次映射后坐标, 避免刷屏
+    if (!s_press_edge_latched) {
+      s_press_edge_latched = true;
+      ESP_LOGI(TAG, "[TOUCH] press x=%d y=%d", (int)x, (int)y);
+    }
   } else {
     data->state = LV_INDEV_STATE_RELEASED;
+    s_press_edge_latched = false;
   }
 }
 

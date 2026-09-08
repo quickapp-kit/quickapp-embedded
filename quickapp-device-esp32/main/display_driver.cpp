@@ -42,6 +42,11 @@ static void flush_cb(lv_display_t* disp, const lv_area_t* area,
   const int x_end = area->x2 + 1;
   const int y_end = area->y2 + 1;
 
+  // RGB565 字节序修正: LVGL 输出小端 RGB565, ILI9341(esp_lcd)期望大端,
+  // 不交换会导致颜色失真(红蓝错位/渐变错乱)。就地交换高低字节。
+  const int px_count = (x_end - x_start) * (y_end - y_start);
+  lv_draw_sw_rgb565_swap(px_map, px_count);
+
   esp_lcd_panel_draw_bitmap(s_panel, x_start, y_start, x_end, y_end, px_map);
 
   lv_display_flush_ready(disp);

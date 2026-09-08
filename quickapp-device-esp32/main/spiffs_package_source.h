@@ -8,7 +8,7 @@
 namespace quickapp::device {
 
 /// SPIFFS-based PackageSource: 从 Flash 分区中读取 RPK 包
-/// RPK 文件通过 esptool 烧写到 rpk_store 分区
+/// RPK 文件作为 app.rpk 写入 rpk_store SPIFFS 分区
 class SpiffsPackageSource final
     : public core::package::PackageSource,
       public std::enable_shared_from_this<SpiffsPackageSource> {

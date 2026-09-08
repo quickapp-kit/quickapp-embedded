@@ -8,6 +8,17 @@ cmake_minimum_required(VERSION 3.16)
 set(QUICKAPP_KIT_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../.." CACHE PATH
     "QuickApp Kit monorepo root")
 
+set(QA_RPK_PATH "" CACHE FILEPATH
+    "Path to the real RPK to package as rpk_store/app.rpk")
+set(QA_RPK_DATA_DIR "${CMAKE_CURRENT_BINARY_DIR}/rpk-data")
+file(MAKE_DIRECTORY "${QA_RPK_DATA_DIR}")
+if(QA_RPK_PATH)
+    if(NOT EXISTS "${QA_RPK_PATH}")
+        message(FATAL_ERROR "QA_RPK_PATH does not exist: ${QA_RPK_PATH}")
+    endif()
+    configure_file("${QA_RPK_PATH}" "${QA_RPK_DATA_DIR}/app.rpk" COPYONLY)
+endif()
+
 # ESP-IDF 项目组件搜索路径
 set(EXTRA_COMPONENT_DIRS
     "${CMAKE_CURRENT_SOURCE_DIR}/components"

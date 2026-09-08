@@ -88,6 +88,9 @@
 /* 渲染: 使用软件渲染 */
 #define LV_USE_DRAW_SW 1
 
+/* PNG 解码 (sport-watch 有 PNG 图片资源; runtime 的 mount_host 直接调 lodepng_decode32) */
+#define LV_USE_LODEPNG 1
+
 #define LV_USE_TINY_TTF 1
 #define LV_TINY_TTF_FILE_SUPPORT 0
 #define LV_TINY_TTF_CACHE_GLYPH_CNT 64
