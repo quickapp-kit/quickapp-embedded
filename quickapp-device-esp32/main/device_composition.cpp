@@ -619,6 +619,10 @@ class LvglClickToCore final {
     auto* self = static_cast<LvglClickToCore*>(context);
     if (self == nullptr) return;
     try {
+      std::fprintf(stderr,
+                   "lvgl.event.clicked surface=%s node=%s timestamp=%llu\n",
+                   surface.wire().c_str(), node.wire().c_str(),
+                   static_cast<unsigned long long>(timestamp));
       const auto request = qc::RequestId::parse(
           "req:p-" + std::to_string(++self->sequence_));
       if (!request) return;
@@ -1955,7 +1959,11 @@ static void device_runtime_main() {
             slots.surfaceContext = std::move(vmSlots.surfaceContext);
             slots.vmInitializationDispatch = std::move(vmSlots.vmInitializationDispatch);
             slots.jsEventDispatch = [handlerRegistry](const ja::JsEventDispatch& value) {
-              static_cast<void>(handlerRegistry->dispatchOnExecutor(value));
+              const bool handled = handlerRegistry->dispatchOnExecutor(value);
+              std::fprintf(stderr,
+                           "js.event.handler surface=%s handler=%s handled=%d\n",
+                           value.surfaceId.c_str(), value.handlerId.c_str(),
+                           handled ? 1 : 0);
             };
             slots.timerStartResult = [facades](const ja::TimerStartResult& value) {
               static_cast<void>(facades->dispatchTimerStartResultOnExecutor(value));
@@ -2231,6 +2239,19 @@ static void device_runtime_main() {
                                           &LvglClickToCore::callback,
                                           &clickSink)) {
             boundObjects[handlerWire] = object;
+            auto* lvObject = static_cast<lv_obj_t*>(object);
+            lv_area_t coordinates{};
+            lv_obj_get_coords(lvObject, &coordinates);
+            std::fprintf(
+                stderr,
+                "showcase.click_handler.bound surface=%s handler=%s node=%s "
+                "rect=%d,%d,%d,%d clickable=%d hidden=%d\n",
+                activeSurface.wire().c_str(), handlerWire.c_str(),
+                node->wire().c_str(), static_cast<int>(coordinates.x1),
+                static_cast<int>(coordinates.y1), static_cast<int>(coordinates.x2),
+                static_cast<int>(coordinates.y2),
+                lv_obj_has_flag(lvObject, LV_OBJ_FLAG_CLICKABLE) ? 1 : 0,
+                lv_obj_has_flag(lvObject, LV_OBJ_FLAG_HIDDEN) ? 1 : 0);
             ++installed;
           }
         }
